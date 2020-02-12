@@ -1,0 +1,542 @@
+<div class="content">
+  <div class="row mb-3 ">
+    <div class="col-12">
+      <h4 class="d-inline-block pt-3 font-weight-bold">
+        <app-mode-img src="assets/img/dark-end-points@2x.png"
+                      whiteSrc="assets/img/end-points@2x.png" width="25px">
+        </app-mode-img>
+        END POINTS
+      </h4>
+      <div ngbDropdown class="d-inline-block float-right dropdown-custom">
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Duration:
+          {{interval.name}}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button ngbDropdownItem (click)="onSelectRange(item)" *ngFor="let item of intervals">{{item.name}}</button>
+        </div>
+      </div>
+<!--      <div ngbDropdown class="d-inline-block float-right mr-3 dropdown-custom">-->
+<!--        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Primary Site</button>-->
+<!--        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">-->
+<!--          <button ngbDropdownItem>Primary Site</button>-->
+<!--        </div>-->
+<!--      </div>-->
+
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-lg-20 ahehe">
+      <div class=" card card-chart card-total text-white">
+        <div class=" card-header pt-2 pr-0">
+          <div class="d-flex flex-row align-items-center">
+            <div class="p-2 ">
+              <h1 class=" card-category text-uppercase font-weight-bold text-white">Total</h1>
+              <div class="d-flex align-items-end">
+                <h1 class="mb-0 font-weight-bold text-white">{{dataJson.total.count}}</h1>
+                <h4 class="pl-2 mb-0 font-weight-bold text-white">{{dataJson.total.increaseOrDecrease}}%
+                  <i class="fas ml-1" [ngClass]="{'fa-caret-down': dataJson.total.isNegative,
+                  'fa-caret-up': !dataJson.total.isNegative,
+                  'increase': !dataJson.total.isNegative,
+                  'decrease': dataJson.total.isNegative}" style="font-size: 20px;"
+                     [hidden]="dataJson.total.increaseOrDecrease === 0"></i>
+                  <span class="text-dark ml-1 minus-sign" style="font-size: 18px"
+                        [hidden]="dataJson.total.increaseOrDecrease !== 0">-</span>
+                </h4>
+              </div>
+            </div>
+          </div>
+          <div class="pl-2 d-flex align-items-end">
+            <div class="d-flex align-items-center text-white">
+              <div class="p-2 rounded-circle d-flex align-items-center mr-1"
+                   style="background: white; width: 30px; height: 30px;">
+                <img src="/assets/img/wifi@2x.png" width="15px">
+              </div>
+              {{dataJson.total.countWifi}}
+            </div>
+            <div class="d-flex align-items-center ml-2 text-white">
+              <div class="p-2 rounded-circle d-flex align-items-center mr-1"
+                   style="background: white; width: 30px; height: 30px;">
+                <img src="/assets/img/train@2x.png" width="15px">
+              </div>
+              {{dataJson.total.countWired}}
+            </div>
+          </div>
+        </div>
+        <div class="card-body px-3 pt-0" *ngFor="let data of [dataJson.total.chart]">
+          <app-line-chart color="63, 238, 207" [data]="data"></app-line-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-80 ahihi">
+      <div class=" card card-chart text-white">
+        <div class="row cardsw">
+          <div class="col-lg-3">
+            <div class=" card-header pt-2 pr-0">
+              <div class="d-flex flex-row align-items-center">
+                <div class="p-2 rounded-circle d-flex align-items-center"
+                     style="background: #86e79f3b; width: 40px; height: 40px;">
+                  <img src="/assets/img/registered.png" width="22px">
+                </div>
+                <div class="p-2 ">
+                  <h1 class=" card-category text-uppercase font-weight-bold">Registered</h1>
+                  <div class="d-flex align-items-end">
+                    <h1 class="mb-0 font-weight-bold"> {{dataJson.registered.count}}
+                    </h1>
+                    <h4 class="pl-2 mb-0 font-weight-bold d-inline-flex">{{dataJson.registered.increaseOrDecrease}}%
+                      <i class="fas ml-1" [ngClass]="{'fa-caret-down': dataJson.registered.isNegative,
+                      'fa-caret-up': !dataJson.registered.isNegative,
+                      'increase': !dataJson.registered.isNegative,
+                      'decrease': dataJson.registered.isNegative}" style="font-size: 20px;"
+                         [hidden]="dataJson.registered.increaseOrDecrease === 0"></i>
+                      <span class="text-dark ml-1 minus-sign" style="font-size: 18px"
+                            [hidden]="dataJson.registered.increaseOrDecrease !== 0">-</span>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body px-3 pt-0" *ngFor="let data of [dataJson.registered.chart]">
+              <app-line-chart color="60, 170, 84" [data]="data"></app-line-chart>
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class=" card-header pt-2 pr-0">
+              <div class="d-flex flex-row align-items-center">
+                <div class="p-2 rounded-circle d-flex align-items-center"
+                     style="background: #aed9ff75; width: 40px; height: 40px;">
+                  <img src="/assets/img/byod.png" width="25px">
+                </div>
+                <div class="p-2 ">
+                  <h1 class=" card-category text-uppercase font-weight-bold">BYOD</h1>
+                  <div class="d-flex align-items-end">
+                    <h1 class="mb-0 font-weight-bold">{{dataJson.BYOD.count}}</h1>
+                    <h4 class="pl-2 mb-0 font-weight-bold d-inline-flex">{{dataJson.BYOD.increaseOrDecrease}} %
+                      <i class="fas ml-1" [ngClass]="{'fa-caret-down': dataJson.BYOD.isNegative,
+                      'fa-caret-up': !dataJson.BYOD.isNegative,
+                      'increase': !dataJson.BYOD.isNegative,
+                      'decrease': dataJson.BYOD.isNegative}" style="font-size: 20px;"
+                         [hidden]="dataJson.BYOD.increaseOrDecrease === 0"></i>
+                      <span class="text-dark ml-1 minus-sign" style="font-size: 18px"
+                            [hidden]="dataJson.BYOD.increaseOrDecrease !== 0">-</span>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class=" card-body px-3 pt-0" *ngFor="let data of [dataJson.BYOD.chart]">
+              <app-line-chart color="0, 139, 255" [data]="data"></app-line-chart>
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class=" card-header pt-2 pr-0">
+              <div class="d-flex flex-row align-items-center">
+                <div class="p-2 rounded-circle d-flex align-items-center"
+                     style="background: #f0d66545; width: 40px; height: 40px;">
+                  <img src="/assets/img/guest@2x.png" width="25px">
+                </div>
+                <div class="p-2 ">
+                  <h1 class=" card-category text-uppercase font-weight-bold">guest</h1>
+                  <div class="d-flex align-items-end">
+                    <h1 class="mb-0 font-weight-bold">{{dataJson.guest.count}}</h1>
+                    <h4 class="pl-2 mb-0 font-weight-bold d-inline-flex">{{dataJson.guest.increaseOrDecrease}}%
+                      <i class="fas ml-1" [ngClass]="{'fa-caret-down': dataJson.guest.isNegative,
+                      'fa-caret-up': !dataJson.guest.isNegative,
+                      'increase': !dataJson.guest.isNegative,
+                      'decrease': dataJson.guest.isNegative}" style="font-size: 20px;"
+                         [hidden]="dataJson.guest.increaseOrDecrease === 0"></i>
+                      <span class="text-dark ml-1 minus-sign" style="font-size: 18px"
+                            [hidden]="dataJson.guest.increaseOrDecrease !== 0">-</span>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class=" card-body px-3 pt-0" *ngFor="let data of [dataJson.guest.chart]">
+              <app-line-chart color="249, 209, 19" [data]="data"></app-line-chart>
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class=" card-header pt-2">
+              <div class="d-flex flex-row align-items-center">
+                <div class="p-2 rounded-circle d-flex align-items-center"
+                     style="background: #fa815d36; width: 40px; height: 40px;">
+                  <img src="/assets/img/iot@2x.png" width="25px">
+                </div>
+                <div class="p-2 ">
+                  <h1 class=" card-category text-uppercase font-weight-bold">iot</h1>
+                  <div class="d-flex align-items-end">
+                    <h1 class="mb-0 font-weight-bold">{{dataJson.IOT.count}}</h1>
+                    <h4 class="pl-2 mb-0 font-weight-bold d-inline-flex"> {{dataJson.IOT.increaseOrDecrease}} %
+                      <i class="fas ml-1" [ngClass]="{'fa-caret-down': dataJson.IOT.isNegative,
+                      'fa-caret-up': !dataJson.IOT.isNegative,
+                      'increase': !dataJson.IOT.isNegative,
+                      'decrease': dataJson.IOT.isNegative}" style="font-size: 20px;"
+                         [hidden]="dataJson.IOT.increaseOrDecrease === 0"></i>
+                      <span class="text-dark ml-1 minus-sign" style="font-size: 18px"
+                            [hidden]="dataJson.IOT.increaseOrDecrease !== 0">-</span>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class=" card-body px-3 pt-0" *ngFor="let data of [dataJson.IOT.chart]">
+              <app-line-chart color="238, 119, 79" [data]="data"></app-line-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class=" row">
+    <div class=" col-lg-4">
+      <div class=" card card-chart">
+        <div class=" card-header divider">
+          <div class="d-flex flex-row align-items-center">
+            <div class=" d-flex align-items-center">
+              <!-- <img src="/assets/img/failures@2x.png" width="25px"> -->
+              <app-mode-img src="/assets/img/dark-failures@2x.png" whiteSrc="/assets/img/failures@2x.png" width="25px">
+              </app-mode-img>
+            </div>
+            <div class="p-2 ">
+              <h1 class="mb-0 card-category text-uppercase font-weight-bold">Failures</h1>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" *ngIf="dataJson.failure.chart && dataJson.failure.chart.length">
+          <div *ngFor="let data of [dataJson.failure.chart]">
+            <app-doughnut-chart [data]="data" title="Failures" bgcolor="#484773" [textMiddle]="true"
+                                [chartColor]="dataJson.failure.backgroundColor">
+            </app-doughnut-chart>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=" col-lg-4">
+      <div class=" card card-chart">
+        <div class=" card-header divider">
+          <div class="d-flex flex-row align-items-center">
+            <div class=" d-flex align-items-center">
+              <app-mode-img src="/assets/img/dark_violations@2x.png" whiteSrc="/assets/img/violations@2x.png"
+                            width="25px"></app-mode-img>
+            </div>
+            <div class="p-2 ">
+              <h1 class="mb-0 card-category text-uppercase font-weight-bold">violations</h1>
+            </div>
+          </div>
+        </div>
+        <div class="card-body"
+             *ngIf="dataJson.violation.chart && dataJson.violation.chart.length" #violationcard>
+          <div *ngFor="let data of [dataJson.violation.chart]">
+            <app-doughnut-chart [data]="data" title="Violations" bgcolor="#44436c" [textMiddle]="true"
+                                [chartColor]="dataJson.violation.backgroundColor">
+            </app-doughnut-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=" col-lg-4">
+      <div class=" card card-chart card-suite">
+        <div class=" card-header divider">
+          <div class="row">
+            <div class="col-4">
+              <div class="d-flex flex-row align-items-center">
+                <div class=" d-flex align-items-center">
+                  <app-mode-img src="/assets/img/dark-alarm@2x.png" whiteSrc="/assets/img/alarm@2x.png" width="25px">
+                  </app-mode-img>
+                </div>
+                <div class="p-2 ">
+                  <h1 class="mb-0 card-category text-uppercase font-weight-bold">Alarms</h1>
+                </div>
+              </div>
+            </div>
+            <div class="col-8 my-auto text-right">
+              <span class="text-center font-weight-bold">Suite/Room Affected</span>
+            </div>
+          </div>
+        </div>
+        <div class=" card-body px-0" #alarmContainer>
+          <div class=" table-responsive table-full-width"
+               style="overflow-y: auto; overflow-x: hidden;padding-bottom: 1px;"
+               [style.height.px]=225 >
+<!--          <div class=" table-responsive table-full-width" *ngIf="alarmContainer?.offsetWidth * 0.485; let kkkk"-->
+<!--               style="overflow-y: auto; overflow-x: hidden;padding-bottom: 1px;" [style.height.px]="kkkk">-->
+            <table class=" table tablesorter alarms-table" id="">
+              <thead class=" text-primary">
+              </thead>
+              <tbody>
+              <tr>
+                <td class="text-right">
+                  <img src="/assets/img/red-alarm@2x.png" alt="red alarm" width="20px">
+                </td>
+                <td>Video Conference down</td>
+                <td class="text-center">
+                  <!-- <img src="/assets/img/layer-8@2x.png" alt="" width="10px" class="mr-2"> -->
+                  <strong>209/Aruba</strong></td>
+              </tr>
+
+              <tr class="even">
+                <td class="text-right">
+                  <img src="/assets/img/orange-alarm@2x.png" alt="red alarm" width="20px">
+                </td>
+                <td>DHCP allocation failed</td>
+                <td class="text-center">
+                  <!-- <img src="/assets/img/layer-8@2x.png" alt="" width="10px" class="mr-2"> -->
+                  <strong>102</strong></td>
+              </tr>
+
+              <tr>
+                <td class="text-right">
+                  <img src="/assets/img/yelllow-alarm@2x.png" alt="red alarm" width="20px">
+                </td>
+                <td>Endpoint usage too high</td>
+                <td class="text-center">
+                  <!-- <img src="/assets/img/layer-8@2x.png" alt="" width="10px" class="mr-2"> -->
+                </td>
+              </tr>
+
+              <tr class="even">
+                <td class="text-right">
+                  <img src="/assets/img/soft-green-alarm@2x.png" alt="red alarm" width="20px">
+                </td>
+                <td>Authentication failed</td>
+                <td class="text-center">
+                  <!-- <img src="/assets/img/layer-8@2x.png" alt="" width="10px" class="mr-2"> -->
+                  <strong>301/Roma</strong>
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=" row">
+    <div class=" col-lg-5 col-md-12">
+      <div class=" card ">
+        <div class=" card-header">
+          <!-- <h4 class=" card-title">
+            <div class="d-inline-block icon icon-clock mr-2"></div>
+            <span class="mb-0 card-category text-white text-uppercase font-weight-bold">AVG. CONNECTION TIME</span>
+
+          </h4> -->
+          <div class="d-flex flex-row align-items-center">
+            <div class=" d-flex align-items-center">
+              <app-mode-img src="/assets/img/clock-light.png" whiteSrc="/assets/img/clock.png"
+                            width="25px"></app-mode-img>
+            </div>
+            <div class="p-2 ">
+              <h1 class="mb-0 card-category text-uppercase font-weight-bold">AVG. CONNECTION TIME</h1>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row avg-connect">
+            <div class="col-md-6 col-sm-12 col-12 text-center mb-2 divider-vertical">
+              <div class="rounded-circle connect connect-wifi p-2  d-flex align-items-center mx-auto mb-2">
+                <img src="assets/img/wifi.png" alt="" width="22" height="18">
+              </div>
+              <span class=" title title-wifi ml-2">Wifi <span class="number ml-1">{{dataJson.avgTime.wifi | number}}
+                ms</span></span>
+              <rg-gauge-chart [canvasWidth]="canvasWidth" [needleValue]="this.dataJson.avgTime.wifiNeedleValue"
+                              [options]="options" [bottomLabel]="'%' + this.dataJson.avgTime.wifiNeedleValue" bottomLabelFont="16px">
+              </rg-gauge-chart>
+            </div>
+            <div class="col-md-6 col-sm-12 col-12 text-center">
+              <div class="rounded-circle connect connect-wifed p-2  d-flex align-items-center mx-auto mb-2">
+                <img src="assets/img/train@2x.png" alt="" width="22" height="18">
+              </div>
+              <span class=" title title-wifed ml-2">Wired <span class="number ml-1">{{dataJson.avgTime.wired | number}}
+                ms</span></span>
+              <rg-gauge-chart [canvasWidth]="canvasWidth" [needleValue]="this.dataJson.avgTime.wiredNeedleValue"
+                              [options]="options2" [bottomLabel]="'%' + this.dataJson.avgTime.wiredNeedleValue"
+                              bottomLabelFont="16px"></rg-gauge-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=" col-lg-7 col-md-12">
+      <div class=" card">
+        <div class=" card-header">
+          <div class="row">
+            <div class="col-4">
+              <div class="d-flex flex-row align-items-center">
+                <div class=" d-flex align-items-center">
+                  <app-mode-img src="/assets/img/dark-throughput@2x.png" whiteSrc="/assets/img/throughput@2x.png"
+                                width="25px"></app-mode-img>
+                </div>
+                <div class="p-2 ">
+                  <h1 class="mb-0 card-category text-uppercase font-weight-bold">Throughput</h1>
+                </div>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="d-flex justify-content-end tabset">
+                <div class="p-2 cursor-pointer" (click)="throughputTab = 'wifi'; getThroughputGraph()"
+                     [ngClass]="{'active': throughputTab === 'wifi'}">
+                  <img src="/assets/img/wifi@2x.png" width="20px" style="transform: translateY(-2px);">
+                  Wifi
+                </div>
+
+                <div class="p-2 cursor-pointer" (click)="throughputTab = 'wired'; getThroughputGraph()"
+                     [ngClass]="{'active': throughputTab === 'wired'}">
+                  <img src="/assets/img/train@2x.png" height="18px" style="transform: translateY(-2px);">
+                  Wired
+                </div>
+                <div class="p-2 cursor-pointer" (click)="throughputTab = 'all'; getThroughputGraph()"
+                     [ngClass]="{'active': throughputTab === 'all'}">
+                  All
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 text-right my-auto pt-3">
+              <span>{{dataJson.throughput.total}} (<i class="fas fa-caret-down ml-1"
+                                                      style="color: #f64a1c;font-size: 20px;"></i> {{dataJson.throughput.down}} <i
+                class="fas fa-caret-up ml-1" style="color: #0bf986;font-size: 20px;"></i> {{dataJson.throughput.up}}
+                )</span>
+            </div>
+          </div>
+        </div>
+        <div class=" card-body throughput-chart" *ngFor="let data of [dataJson.throughput.chart]">
+          <app-line-chart color="0, 139, 255" [data]="data" showLabel="true" shadowPercent="0"
+                          [min]="min" [stepSize]="interval?.stepSize" [showMonthDate]="showMonthDate">
+          </app-line-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  -->
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="navbar navbar-expand p-0 border-radius-8" style="overflow: auto"
+           [ngClass]="{'nav-dark': isDarkMode, 'bg-white': !isDarkMode}">
+        <div class="collapse navbar-collapse link-section d-flex flex-wrap justify-content-end">
+          <ul class="navbar-nav mr-auto" [ngClass]="{'text-black-light': !isDarkMode}">
+            <li class="nav-item active p-2 px-md-2 px-4 pl-3 my-auto d-flex end-points-item text-white">
+              <img class="my-auto" src="assets/img/end-points-white.png" width="20" height="20">
+              <a class="nav-link web-link font-weight-bold text-uppercase text-white">Top Traffic Usage</a>
+            </li>
+            <li class="nav-item px-3 cursor-pointer" (click)="tabName = 'appName'; getEndPoint()">
+              <a class="nav-link web-link font-weight-bold h-100 d-flex align-items-center"
+                 [ngClass]="{'item-active': tabName === 'appName'}">Application</a>
+            </li>
+            <li class="nav-item active px-3 cursor-pointer" (click)="tabName = 'appCategory'; getEndPoint()">
+              <a class="nav-link web-link font-weight-bold h-100 d-flex align-items-center"
+                 [ngClass]="{'item-active': tabName === 'appCategory'}">Category</a>
+            </li>
+            <!-- <li class="nav-item active px-3 cursor-pointer" (click)="tabName = 'usage'">
+              <a class="nav-link web-link font-weight-bold h-100 d-flex align-items-center"
+                [ngClass]="{'item-active': tabName === 'usage'}">Usage</a>
+            </li> -->
+            <li class="nav-item active px-3 cursor-pointer" (click)="tabName = 'os'; getEndPoint()">
+              <a class="nav-link web-link font-weight-bold h-100 d-flex align-items-center"
+                 [ngClass]="{'item-active': tabName === 'os'}">OS</a>
+            </li>
+            <li class="nav-item active px-3 cursor-pointer" (click)="tabName = 'vendor'; getEndPoint()">
+              <a class="nav-link web-link font-weight-bold h-100 d-flex align-items-center"
+                 [ngClass]="{'item-active': tabName === 'vendor'}">Manufacturer</a>
+            </li>
+            <li class="nav-item active px-3 cursor-pointer" (click)="tabName = 'suite'; getEndPoint()">
+              <a class="nav-link web-link font-weight-bold h-100 d-flex align-items-center"
+                 [ngClass]="{'item-active': tabName === 'suite'}">Suite</a>
+            </li>
+            <li class="nav-item active px-3 cursor-pointer" (click)="tabName = 'room'; getEndPoint()">
+              <a class="nav-link web-link font-weight-bold h-100 d-flex align-items-center"
+                 [ngClass]="{'item-active': tabName === 'room'}">Room</a>
+            </li>
+            <li class="nav-item active px-3 cursor-pointer" (click)="tabName = 'user'; getEndPoint()">
+              <a class="nav-link web-link font-weight-bold h-100 d-flex align-items-center"
+                 [ngClass]="{'item-active': tabName === 'user'}">User</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <div class="row pt-4">
+    <div class="col-md-3 col-12">
+      <div class="card card-chart percentDounughChart">
+        <div class="card-body" *ngIf="dataJson.endpoint.chart && dataJson.endpoint.chart.length">
+          <div *ngFor="let data of [dataJson.endpoint.chart]">
+            <app-doughnut-chart [data]="data" labelPosition="bottom" cutoutPercentage="55" [textMiddle]="false"
+                                [aspectRatio]="false" [showPercent]="true" bgcolor="#4e4e75"
+                                [chartColor]="dataJson.endpoint.backgroundColor"></app-doughnut-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9 col-12">
+      <div class="table-responsive table-full-width" style="overflow: auto;padding-bottom: 1px;">
+        <table class="table tablesorter" id="">
+          <thead class="text-primary">
+          <tr class="header-text"
+              [ngClass]="{'bg-grey-dark': isDarkMode, 'bg-grey-light': !isDarkMode, 'text-black-light': !isDarkMode}">
+            <th></th>
+            <th></th>
+            <th class="text-center border-left border-right"
+                [ngClass]="{'border-light-white': isDarkMode, 'border-light-dark': !isDarkMode}" colspan="2" scope="colgroup">By Connection Type</th>
+            <th class="text-center" colspan="4" scope="colgroup">By Device Type</th>
+          </tr>
+          <tr class="header-text"
+              [ngClass]="{'bg-grey-dark': isDarkMode, 'bg-grey-light': !isDarkMode, 'text-black-light': !isDarkMode}">
+            <th>Name</th>
+            <th>Total</th>
+            <th class="border-left" [ngClass]="{'border-light-white': isDarkMode, 'border-light-dark': !isDarkMode}">
+              WiFi</th>
+            <th class="border-right" [ngClass]="{'border-light-white': isDarkMode, 'border-light-dark': !isDarkMode}">
+              Wired</th>
+            <th>Registered</th>
+            <th>BYOD</th>
+            <th>Guest</th>
+            <th>IOT</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr [ngClass]="{'even': i%2 != 0}" *ngFor="let application of dataJson?.endpoint?.table; let i = index">
+            <td class="text-blue">
+              <u>{{application?.name}}</u>
+            <td [ngClass]="{'text-grey': !isDarkMode}">
+            <!-- {{application?.total | number:'1.0-0'}}MB -->
+            {{application?.total}}
+
+          </td>
+            <td class="border-left"
+                [ngClass]="{'text-grey': !isDarkMode, 'border-light-white': isDarkMode, 'border-light-dark': !isDarkMode}">
+              {{application?.wifi}}
+            </td>
+            <td class="border-right"
+                [ngClass]="{'text-grey': !isDarkMode, 'border-light-white': isDarkMode, 'border-light-dark': !isDarkMode}">
+              {{application?.wired}}
+            </td>
+            <td [ngClass]="{'text-grey': !isDarkMode}">
+              {{application?.registered}}
+            </td>
+            <td [ngClass]="{'text-grey': !isDarkMode}">
+              {{application?.boyd}}
+            </td>
+            <td [ngClass]="{'text-grey': !isDarkMode}">
+              {{application?.guest}}
+            </td>
+            <td [ngClass]="{'text-grey': !isDarkMode}">
+              {{application?.iot}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

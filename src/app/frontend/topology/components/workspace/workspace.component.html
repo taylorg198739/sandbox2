@@ -1,0 +1,11 @@
+<div id="canvas"></div>
+
+<button
+  class="tooltip-button"
+  mat-button
+  #tooltip="matTooltip"
+  [matTooltip]="'ID: ' + tooltipInfo.id + '&#13;&#13;' + 'Type: ' + tooltipInfo.type"
+  matTooltipPosition="after"
+  matTooltipClass="tooltip-multiline"
+  [ngStyle]="{'top.px': tooltipInfo.top, 'left.px': tooltipInfo.left}">
+</button>

@@ -1,0 +1,12 @@
+<!--
+Copyright (c) 2019 WaveSurf Systems Inc. All rights reserved.
+-->
+
+<div [hidden]="shouldShowZeroState()">
+  <kd-cluster-list (onchange)="onListUpdate($event)"
+                   [hideable]="true"></kd-cluster-list>
+  <kd-namespace-list (onchange)="onListUpdate($event)"
+                  [hideable]="true"></kd-namespace-list>
+</div>
+
+<kd-zero-state [hidden]="!shouldShowZeroState()"></kd-zero-state>

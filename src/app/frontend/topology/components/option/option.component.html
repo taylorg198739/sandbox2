@@ -1,0 +1,20 @@
+<h2>
+  Topology Configuration
+</h2>
+
+<div fxLayout="column">
+  <mat-form-field >
+    <mat-label>Input data</mat-label>
+    <textarea matInput
+              matTextareaAutosize
+              matAutosizeMaxRows=30
+              [formControl]="data">
+    </textarea>
+  </mat-form-field>
+</div>
+<button mat-raised-button
+    color="primary"
+    class="save-button"
+    (click)="onGenerate()">
+  Generate
+</button>

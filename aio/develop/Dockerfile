@@ -1,0 +1,120 @@
+# Copyright 2019 The Kubernetes Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# This is a Dockerfile for running and building Kubernetes dashboard
+# It installs all deps in the container and adds the dashboard source
+# This way it abstracts all required build tools away and lets the user
+# run gulp tasks on the code with only docker installed
+
+# golang is based on debian:jessie
+# Specify version to clarify which version we use.
+FROM golang:1.12
+
+# Install Node.js. Go is already installed.
+# A small tweak, apt-get update is already run by the nodejs setup script,
+# so there's no need to run it again.
+RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - \
+  && apt-get install -y --no-install-recommends \
+	nodejs \
+	patch \
+	chromium \
+	bc \
+	sudo \
+	gosu \
+	nano \
+	less \
+	unzip \
+	libssl-dev \
+	libghc-zlib-dev \
+	libcurl4-gnutls-dev \
+	libexpat1-dev \
+	gettext \
+	xvfb \
+	libgtk-3-0 \
+	libgconf-2-4 \
+	vim \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& apt-get clean
+
+# Re-install git
+# NOTE(shu-muto): husky-3.x requires git>=2.13.2 but golang:1.12 image based on debian 9 (stretch)
+#                 does not satisfy the requirement. Its git version is 2.11.0.
+#                 So re-install specified version of git from source code.
+RUN GIT_VERSION=2.22.0 && apt-get remove -y git && cd /tmp && rm -fr git* && wget https://github.com/git/git/archive/v${GIT_VERSION}.zip -O git.zip && unzip git.zip && mv git-${GIT_VERSION} git && cd git && make prefix=/usr all && make prefix=/usr install
+ENV GIT_EDITOR=nano
+ENV NODE_OPTIONS=--max_old_space_size=4096
+
+# Install dependencies. This will take a while.
+RUN npm install -g npm@latest gulp@4.0.2 @angular/cli@8.0.3 ngx-i18nsupport
+
+# Set environment variable for JavaScript tests.
+ENV CHROME_BIN=/usr/bin/chromium
+
+# Set environment variable for terminal
+ENV TERM=xterm
+
+# Add ${GOPATH}/bin into ${PATH}
+ENV PATH=${GOPATH}/bin:${PATH}
+
+# For testing, etc., to know if this environment is on container.
+ENV K8S_DASHBOARD_CONTAINER=TRUE
+
+# Suppress angular analytics dialog
+ENV NG_CLI_ANALYTICS=false
+
+# Download a statically linked docker client,
+# so the container is able to build images on the host.
+RUN curl -sSL https://download.docker.com/linux/static/stable/x86_64/docker-18.06.1-ce.tgz > /tmp/docker.tgz && \
+	cd /tmp/ && \
+	tar xzvf docker.tgz && \
+	rm docker.tgz && \
+	mv /tmp/docker/docker /usr/bin/docker && \
+	rm -rf /tmp/docker/ && \
+	chmod +x /usr/bin/docker
+
+ADD config/kubectl /usr/local/bin/kubectl
+ADD config/demo /root/.kube/config
+
+# Install golangci for ckecking or fixing go format.
+# `npm ci` installs golangci, but this installation is needed
+# for running `npm run check` singlely, like
+# `aio/develop/run-npm-on-container.sh run check`.
+RUN curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.17.1
+
+# Install delve for debuging go files.
+RUN go get github.com/go-delve/delve/cmd/dlv
+RUN go get -u -v github.com/gogo/protobuf/proto
+RUN go get -u -v github.com/prometheus/client_golang/prometheus
+
+# Install code-generator. `go get` rises error, use `git clone` instead.
+RUN mkdir -p /go/src/k8s.io
+RUN git clone https://github.com/kubernetes/code-generator /go/src/k8s.io/code-generator
+
+# Enable go mod. Note(shu-mutou): do not set this before `go get`
+ENV GO111MODULE=on
+
+# Set GOPROXY to ensure download modules
+ENV GOPROXY=https://proxy.golang.org
+
+# Mount point for kubeconfig
+RUN mkdir -p /home/user/.kube
+
+# Current directory is always dashboard source directory.
+WORKDIR /root/go/src/github.com/witesand/dashboard
+
+# Expose port for frontend, backend and remote debuging
+EXPOSE 8080 8443 9090 8090 2345
+
+# Run gosu command in container.
+CMD ./aio/develop/gosu-command.sh

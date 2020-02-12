@@ -1,0 +1,82 @@
+<!--
+Copyright (c) 2019 WaveSurf Systems Inc. All rights reserved.
+-->
+
+<kd-card role="table"
+         [hidden]="isHidden()">
+  <div title
+       fxLayout="row"
+       i18n>Clusters</div>
+  <div description><span class="kd-muted-light"
+          i18n>Items:&nbsp;</span>{{totalItems}}</div>
+  <div actions>
+    <kd-card-list-filter></kd-card-list-filter>
+  </div>
+
+  <div content
+       [hidden]="showZeroState()">
+    <div kdLoadingSpinner
+         [isLoading]="isLoading"></div>
+
+    <mat-table [dataSource]="getData()"
+               matSort
+               [matSortActive]="getColumns()[0]"
+               matSortDisableClear
+               matSortDirection="asc">
+
+      <ng-container [matColumnDef]="getColumns()[0]">
+        <mat-header-cell *matHeaderCellDef
+                         mat-sort-header
+                         disableClear="true"
+                         i18n>Name</mat-header-cell>
+        <mat-cell *matCellDef="let cluster">
+          <a [routerLink]="getDetailsHref(cluster.objectMeta.name)"
+             queryParamsHandling="preserve">
+            {{cluster.objectMeta.name}}
+          </a>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container [matColumnDef]="getColumns()[1]">
+        <mat-header-cell *matHeaderCellDef
+                         mat-sort-header
+                         i18n>DeviceSNMPV2ReadCommunityName</mat-header-cell>
+        <mat-cell *matCellDef="let cluster">
+            {{cluster.deviceSNMPV2ReadCommunityName}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container [matColumnDef]="getColumns()[2]">
+        <mat-header-cell *matHeaderCellDef
+                         mat-sort-header
+                         i18n>Age</mat-header-cell>
+        <mat-cell *matCellDef="let cluster">
+          <kd-date [date]="cluster.objectMeta.creationTimestamp"
+                   relative></kd-date>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container *ngFor="let col of getActionColumns()"
+                    [matColumnDef]="col.name">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let cluster">
+          <kd-dynamic-cell [component]="col.component"
+                           [resource]="cluster"></kd-dynamic-cell>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="getColumns()"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: getColumns();"></mat-row>
+    </mat-table>
+
+    <mat-paginator [length]="totalItems"
+                   [pageSize]="itemsPerPage"
+                   [hidePageSize]="true"
+                   [showFirstLastButtons]="true"></mat-paginator>
+  </div>
+
+  <div content
+       [hidden]="!showZeroState()">
+    <kd-list-zero-state></kd-list-zero-state>
+  </div>
+</kd-card>

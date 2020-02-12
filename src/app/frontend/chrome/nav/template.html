@@ -1,0 +1,29 @@
+<!--
+Copyright (c) 2019 WaveSurf Systems Inc. All rights reserved.
+-->
+
+<mat-drawer-container class="kd-nav">
+  <mat-drawer class="kd-nav"
+              mode="side">
+
+    <div class="kd-nav-group">
+      <kd-nav-item class="kd-nav-item"
+                   state="/topology"
+                   i18n>Topology
+      </kd-nav-item>
+      <kd-nav-item class="kd-nav-item"
+                   state="/device"
+                   i18n>Devices
+      </kd-nav-item>
+    </div>
+    <mat-divider></mat-divider>
+    <kd-namespace-selector></kd-namespace-selector>
+    <mat-divider></mat-divider>
+
+    <div class="kd-nav-group">
+      <kd-nav-item class="kd-nav-group-item"
+                   state="/about"
+                   i18n>About
+      </kd-nav-item>
+    </div>  </mat-drawer>
+</mat-drawer-container>
