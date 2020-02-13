@@ -4,7 +4,7 @@
     "secure": false
   },
   "/config": {
-    "target": "http://127.0.0.1:80",
+    "target": "http://ec2-54-241-135-160.us-west-1.compute.amazonaws.com:8081",
     "secure": false
   }
 }
