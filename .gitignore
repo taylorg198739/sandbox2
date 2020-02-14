@@ -43,3 +43,4 @@ npm-debug.log
 
 # misc
 pre_build.done
+package-lock.json

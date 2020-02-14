@@ -179,8 +179,8 @@ export class DashboardComponent implements OnInit {
 
   updateColor = () => {
     const navbar = document.getElementsByClassName('navbar')[0];
-    navbar.classList.add('bg-white');
-    navbar.classList.remove('navbar-transparent');
+    navbar && navbar.classList.add('bg-white');
+    navbar && navbar.classList.remove('navbar-transparent');
   }
 
   loadData() {
