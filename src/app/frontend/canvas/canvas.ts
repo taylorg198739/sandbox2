@@ -82,7 +82,7 @@ export class Canvas {
   }
 
   createObject(type: string, data: any): CanvasObject {
-    let object = new CanvasObject(this.getCanvas(), this.convert, this.eventEmitter, {data, ...OBJECT_CONFIG[type]});
+    const object = new CanvasObject(this.getCanvas(), this.convert, this.eventEmitter, {data, ...OBJECT_CONFIG[type]});
     return object.create(this.nodes);
   }
 
@@ -92,7 +92,7 @@ export class Canvas {
 
     const objects = data['objects']['items'];
     objects.forEach((object: IObjectData) => {
-      let obj = this.createObject(object.status.role, object);
+      const obj = this.createObject(object.status.role, object);
       obj.get().hide();
       this.objects.push(obj);
     });
@@ -102,12 +102,12 @@ export class Canvas {
     const links = data['links']['items'];
     const cons: any[] = [];
     links.forEach((link: ILinkData) => {
-      let source = this.objects.find((object: CanvasObject) => object.data.status.hostName === link.status.localDevice)
-      let target = this.objects.find((object: CanvasObject) => object.data.status.hostName === link.status.remoteDevice)
+      const source = this.objects.find((object: CanvasObject) => object.data.status.hostName === link.status.localDevice)
+      const target = this.objects.find((object: CanvasObject) => object.data.status.hostName === link.status.remoteDevice)
       if (source && target) {
-        let alt = cons.find((con) => con.source === target.data.status.hostName && con.target === source.data.status.hostName);
+        const alt = cons.find((con) => con.source === target.data.status.hostName && con.target === source.data.status.hostName);
         this.links.push(this.connect(source, target, alt ? true : false));
-  
+
         cons.push({
           source: source.data.status.hostName,
           target: target.data.status.hostName
@@ -117,22 +117,22 @@ export class Canvas {
   }
 
   autoAlign() {
-    let objects: any = {};
+    const objects: any = {};
     const links = this.data['links']['items'];
 
-    for(let type in OBJECT_TYPE) {
+    for(const type in OBJECT_TYPE) {
       const level = OBJECT_CONFIG[OBJECT_TYPE[type]].level;
       !objects[level] ? objects[level] = [] : null;
 
       const items = this.objects.filter((object) => object.data.status.role === OBJECT_TYPE[type]);
 
       items.forEach(item => {
-        let child: any[] = [];
+        const child: any[] = [];
         links.forEach((link: any) => {
           if (link.status.localDevice === item.data.status.hostName) {
             console.log(link);
             console.log(item);
-            let obj = this.objects.find((object) => object.data.status.hostName === link.status.remoteDevice)
+            const obj = this.objects.find((object) => object.data.status.hostName === link.status.remoteDevice)
             console.log(obj);
             if (obj && item.config.level < obj.config.level) child.push(obj)
           }
@@ -143,13 +143,14 @@ export class Canvas {
       });
     }
 
-    let switchRows: any = [];
-    let switchCountsPerRow = this._getSwitchCountsPerRow(objects[3].length);
+    const switchRows: any = [];
+    const switchCountsPerRow = this._getSwitchCountsPerRow(objects[3].length);
     let index = 0;
     switchCountsPerRow.forEach((number) => {
-      let row = [];
-      for (let i = 0; i < number; i ++)
+      const row = [];
+      for (let i = 0; i < number; i ++) {
         row.push(objects[3][index]), index++;
+      }
       switchRows.push(row);
     });
 
@@ -180,8 +181,8 @@ export class Canvas {
               child.move(xPos, yPos);
             });
           } else {
-            let children_width = item.children.length === 0 ? 0 : (item.children[0].width() * item.children.length) + (item.children.length - 1) * MIN_WIDTH_SPACE;
-            let max_width = children_width;
+            const children_width = item.children.length === 0 ? 0 : (item.children[0].width() * item.children.length) + (item.children.length - 1) * MIN_WIDTH_SPACE;
+            const max_width = children_width;
 
             item.children.forEach((child: CanvasObject, child_index) => {
               child.get().show();
@@ -192,12 +193,12 @@ export class Canvas {
           xPos += item.width() + MIN_WIDTH_SPACE;
         } else {
           item.config.showExpand = false;
-          let children_width = item.children.length === 0 ? 0 : (item.children[0].width() * item.children.length) + (item.children.length - 1) * MIN_WIDTH_SPACE;
-          let max_width = Math.max(item.width(), children_width);
+          const children_width = item.children.length === 0 ? 0 : (item.children[0].width() * item.children.length) + (item.children.length - 1) * MIN_WIDTH_SPACE;
+          const max_width = Math.max(item.width(), children_width);
           maxHeight += (item.children.length === 0 ? 0 : (item.children[0].height()));
 
           item.move((max_width - item.width()) / 2 + xPos, yPos);
-          
+
           item.children.forEach((child: CanvasObject, child_index) => {
             child.get().show();
             child.move(Math.floor(xPos + (max_width - children_width) / 2 + child_index * (child.width() + MIN_WIDTH_SPACE)), yPos + item.height() + item.config.zHeight + MIN_HEIGHT_SPACE);
@@ -259,16 +260,16 @@ export class Canvas {
   }
 
   /**
-   * 
+   *
    * @param objects Total objects to search switch object
    * @param sw      Switch object which has many APs.
    * @param apCount Number of APs per switch
    */
   createTextForSwitch(objects: CanvasObject[], sw: CanvasObject) {
-    let group = this.texts.group();
-    let rect2 = group.rect(42, 12).fill('#aaa');
-    let rect1 = group.rect(40, 10).fill('#fff').stroke(sw.expand ? '#f00' : '#00f');
-    let text = group.text(function(add: any) {
+    const group = this.texts.group();
+    const rect2 = group.rect(42, 12).fill('#aaa');
+    const rect1 = group.rect(40, 10).fill('#fff').stroke(sw.expand ? '#f00' : '#00f');
+    const text = group.text(function(add: any) {
       add.tspan(`${sw.expand ? '-' : '+'} ${sw.children.length} APs`);
     });
 
@@ -324,12 +325,12 @@ export class Canvas {
   }
 
   confirmConnector(obj1: CanvasObject, obj2: CanvasObject) {
-    let points = this._nearestPoints(obj1, obj2);
+    const points = this._nearestPoints(obj1, obj2);
     if (obj1.get().cons) {
-      let con = obj1.get().cons.find((con: any) => con.target === obj2.get());
+      const con = obj1.get().cons.find((con: any) => con.target === obj2.get());
 
-      con.connector.plot(`M ${points[0]} ${points[1]} L ${points[2]} ${points[3]}`);
-  
+      points && con.connector.plot(`M ${points[0]} ${points[1]} L ${points[2]} ${points[3]}`);
+
       return con;
     }
     else return null;
@@ -348,10 +349,10 @@ export class Canvas {
   }
 
   /**
-   * 
+   *
    * @param obj1 CanvasObject
    * @param obj2 CanvasObject
-   * 
+   *
    * Each canvas object has some points to be connected. We return the proper points depends on the position of the objects.
    * return format: [x1, y1, x2, y2]
    */
@@ -365,15 +366,15 @@ export class Canvas {
       P2 = obj2.config.points.bottom;
     } else {
       P1 = obj1.config.points.right;
-      P2 = obj2.config.points.left;
+      P2 = obj2.config.points && obj2.config.points.left;
     }
 
-    return [P1.x + obj1.get().x(), P1.y + obj1.get().y(), P2.x + obj2.get().x(), P2.y + obj2.get().y()];
+    return obj1.get() && obj2.get() && P1 && P2 && [P1.x + obj1.get().x(), P1.y + obj1.get().y(), P2.x + obj2.get().x(), P2.y + obj2.get().y()];
   }
 
   _getSwitchCountsPerRow(n: number) {
-    let rows = Math.floor(n / MAX_SWITCH_PER_ROW) + 1;
-    let result = [];
+    const rows = Math.floor(n / MAX_SWITCH_PER_ROW) + 1;
+    const result = [];
     let temp = parseInt(n.toString());
     for (let i = 1; i <= rows; i ++) {
       if (i === rows) result.push(temp);
@@ -387,14 +388,14 @@ export class Canvas {
   }
 
   _drawGrid() {
-    var pattern_w = Math.sin(SVG.math.rad(60)) * (2 * this.option.isometricUnit)
-    var pattern_h = this.option.isometricUnit
-    var pattern = this.canvas.pattern(pattern_w, pattern_h, function(add: any) {
+    const pattern_w = Math.sin(SVG.math.rad(60)) * (2 * this.option.isometricUnit)
+    const pattern_h = this.option.isometricUnit
+    const pattern = this.canvas.pattern(pattern_w, pattern_h, function(add: any) {
       add.line(0, 0, pattern_w, pattern_h)
       add.line(pattern_w, 0, 0, pattern_h)
-    }).stroke("#ddd")
+    }).stroke('#ddd')
 
-    var pointsOfGrid = {
+    const pointsOfGrid = {
       leftTop: [
         0,
         0
@@ -413,7 +414,7 @@ export class Canvas {
       ]
     }
 
-    var area = this.canvas.polygon([
+    const area = this.canvas.polygon([
       pointsOfGrid.leftTop,
       pointsOfGrid.rightTop,
       pointsOfGrid.rightBottom,

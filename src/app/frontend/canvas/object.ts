@@ -53,7 +53,7 @@ export class CanvasObject {
 
   create(nodes: any) {
     this.object = nodes.group();
-    this.object.image(`assets/images/${this.config.type.toLowerCase()}.svg`, this.config.imageWidth, this.config.imageHeight)
+    this.config.type && this.object.image(`assets/images/${this.config.type.toLowerCase()}.svg`, this.config.imageWidth, this.config.imageHeight)
                 .attr('id', this.config.id);
 
     this.move(this.config.left, this.config.top);
@@ -64,7 +64,7 @@ export class CanvasObject {
         id: this.config.id,
         type: this.config.type.toUpperCase(),
         status: 'hover',
-        event: event
+        event
       });
     });
 
@@ -92,7 +92,7 @@ export class CanvasObject {
   }
 
   _move() {
-    this.object.move(this.convert([this.config.left, this.config.top])[0] - this.config.originPoint.x, this.convert([this.config.left, this.config.top])[1] - this.config.originPoint.y);
+    this.config.originPoint && this.object.move(this.convert([this.config.left, this.config.top])[0] - this.config.originPoint.x, this.convert([this.config.left, this.config.top])[1] - this.config.originPoint.y);
   }
 
   remove() {
